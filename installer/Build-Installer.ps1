@@ -9,6 +9,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $projectFile = Join-Path $projectRoot 'src\AirMirror.csproj'
 $publishDirectory = Join-Path $projectRoot 'artifacts\publish'
 $installerScript = Join-Path $PSScriptRoot 'AirMirror.iss'
+$brandAssetsScript = Join-Path $projectRoot 'assets\Generate-BrandAssets.ps1'
 $engineExecutable = Join-Path $projectRoot 'engine\uxplay-windows.exe'
 $isccCandidates = @(
     (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'),
@@ -23,6 +24,8 @@ if ($null -eq $iscc) {
 if (-not (Test-Path -LiteralPath $engineExecutable)) {
     & (Join-Path $PSScriptRoot 'Prepare-Engine.ps1')
 }
+
+& $brandAssetsScript
 
 Remove-Item -LiteralPath $publishDirectory -Recurse -Force -ErrorAction SilentlyContinue
 dotnet publish $projectFile `

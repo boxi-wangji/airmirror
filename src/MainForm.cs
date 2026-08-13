@@ -63,7 +63,7 @@ internal sealed class MainForm : Form
         _settings = ReceiverSettings.Load(_settingsPath);
 
         BuildUserInterface();
-        Icon = CreateWhiteTitleIcon();
+        Icon = CreateApplicationIcon();
         _deviceNameInput.Text = _settings.DeviceName;
 
         if (_engineDirectory is null)
@@ -754,27 +754,10 @@ internal sealed class MainForm : Form
         return new string(allowed.ToArray());
     }
 
-    private static Icon CreateWhiteTitleIcon()
+    private static Icon CreateApplicationIcon()
     {
-        using var bitmap = new Bitmap(32, 32);
-        using var graphics = Graphics.FromImage(bitmap);
-        graphics.SmoothingMode = SmoothingMode.AntiAlias;
-        graphics.Clear(Color.Transparent);
-        using var brush = new SolidBrush(Color.White);
-        graphics.FillRectangle(brush, 5, 5, 9, 9);
-        graphics.FillRectangle(brush, 18, 5, 9, 9);
-        graphics.FillRectangle(brush, 5, 18, 9, 9);
-
-        var iconHandle = bitmap.GetHicon();
-        try
-        {
-            using var temporaryIcon = Icon.FromHandle(iconHandle);
-            return (Icon)temporaryIcon.Clone();
-        }
-        finally
-        {
-            NativeWindow.DestroyIcon(iconHandle);
-        }
+        var executableIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+        return executableIcon is null ? (Icon)SystemIcons.Application.Clone() : (Icon)executableIcon.Clone();
     }
 
     private void SetState(string state, Color color, bool running)

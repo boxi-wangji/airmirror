@@ -7,5 +7,6 @@
     <Nullable>enable</Nullable>
     <AssemblyName>AirMirror</AssemblyName>
     <RootNamespace>AirMirror</RootNamespace>
+    <ApplicationIcon Condition="Exists('..\\assets\\AirMirror.ico')">..\assets\AirMirror.ico</ApplicationIcon>
   </PropertyGroup>
 </Project>

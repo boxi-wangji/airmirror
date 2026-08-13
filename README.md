@@ -11,7 +11,7 @@
 ## 怎么用
 
 1. 运行 `AirMirror-Setup-*.exe` 完成安装，然后从开始菜单打开 AirMirror。
-2. 填一个设备名，例如 `波西投屏`。
+2. 填一个设备名，例如 `波西投屏`。首次安装默认留空，由你自行命名。
 3. 点击「开始接收 AirPlay」。
 4. iPhone 和电脑连接同一 Wi‑Fi。
 5. iPhone 打开控制中心 → 屏幕镜像 → 选择这个设备名。
@@ -26,11 +26,12 @@ AirMirror 当前固定使用 Direct3D 12 输出画面，并关闭了音视频同
 - `engine/`：开源 UxPlay Windows 接收内核及其视频、音频、网络组件；安装包会将其部署到程序目录。
 - `%LOCALAPPDATA%\\AirMirror\\`：AirMirror 的本机设备名，第一次运行后生成。
 - `%LOCALAPPDATA%\\AirMirror\\logs\\gstreamer.log`：仅在排查画面故障时生成的本机视频日志。
-- `installer/`：Inno Setup 安装包脚本与构建脚本。
+- `assets/`：AirMirror 的 SVG Logo，以及生成 Windows 图标和安装向导视觉素材的脚本。
+- `installer/`：简体中文安装向导与构建脚本。
 
 ## 安装包
 
-从 GitHub Releases 下载 `AirMirror-Setup-*.exe`，运行后即可安装、创建开始菜单快捷方式，并可从 Windows 设置中卸载。
+运行 `AirMirror-Setup-*.exe`，即可通过简体中文安装向导完成安装、创建开始菜单快捷方式，并可从 Windows 设置中卸载。
 
 ## 从源码构建
 

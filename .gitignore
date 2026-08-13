@@ -13,3 +13,6 @@ src/obj/
 # IDE and debugging artifacts.
 .vs/
 *.pdb
+assets/AirMirror.ico
+installer/airmirror-wizard.bmp
+installer/airmirror-wizard-small.bmp

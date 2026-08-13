@@ -4,7 +4,7 @@ namespace AirMirror;
 
 internal sealed class ReceiverSettings
 {
-    public string DeviceName { get; set; } = "波西投屏";
+    public string DeviceName { get; set; } = string.Empty;
 
     public double? VideoAspectRatio { get; set; }
 
