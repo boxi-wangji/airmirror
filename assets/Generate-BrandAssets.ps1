@@ -4,67 +4,87 @@ $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.Drawing
 
 $projectRoot = Split-Path -Parent $PSScriptRoot
+$logoSourcePath = Join-Path $PSScriptRoot 'airmirror-logo.svg'
 $iconPath = Join-Path $PSScriptRoot 'AirMirror.ico'
 $wizardImagePath = Join-Path $projectRoot 'installer\airmirror-wizard.bmp'
 $wizardSmallImagePath = Join-Path $projectRoot 'installer\airmirror-wizard-small.bmp'
+$renderPath = Join-Path $env:TEMP 'airmirror-logo-render.png'
+$profileDirectory = Join-Path $env:TEMP 'airmirror-logo-render-profile'
+
+function Get-EdgeExecutable {
+    $candidates = @(
+        (Join-Path ${env:ProgramFiles(x86)} 'Microsoft\Edge\Application\msedge.exe'),
+        (Join-Path $env:ProgramFiles 'Microsoft\Edge\Application\msedge.exe')
+    )
+
+    return $candidates | Where-Object { Test-Path -LiteralPath $_ } | Select-Object -First 1
+}
 
 function New-LogoBitmap([int]$Size) {
-    $bitmap = [System.Drawing.Bitmap]::new($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-    $graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+    $edge = Get-EdgeExecutable
+    if ($null -eq $edge) {
+        throw '未找到 Microsoft Edge，无法从 SVG 生成 AirMirror 图标素材。'
+    }
+
+    Remove-Item -LiteralPath $renderPath -Force -ErrorAction SilentlyContinue
+    New-Item -ItemType Directory -Force -Path $profileDirectory | Out-Null
+    $sourceUrl = 'file:///' + $logoSourcePath.Replace('\', '/')
+    $arguments = @(
+        '--headless=new',
+        '--disable-gpu',
+        '--no-sandbox',
+        '--hide-scrollbars',
+        '--window-size=512,512',
+        "--user-data-dir=$profileDirectory",
+        "--screenshot=$renderPath",
+        $sourceUrl
+    )
+    $edgeProcess = Start-Process -FilePath $edge -ArgumentList $arguments -PassThru
+    $edgeProcess.WaitForExit()
+    if (-not (Test-Path -LiteralPath $renderPath)) {
+        throw 'AirMirror SVG Logo 渲染失败。'
+    }
+
+    $source = [System.Drawing.Bitmap]::new($renderPath)
     try {
-        $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
-        $graphics.Clear([System.Drawing.Color]::Transparent)
-        $padding = [int]($Size * 0.055)
-        $bounds = [System.Drawing.Rectangle]::new($padding, $padding, $Size - ($padding * 2), $Size - ($padding * 2))
-        $background = [System.Drawing.Drawing2D.LinearGradientBrush]::new(
-            $bounds,
-            [System.Drawing.Color]::FromArgb(32, 213, 245),
-            [System.Drawing.Color]::FromArgb(16, 45, 132),
-            45)
-        try {
-            $graphics.FillEllipse($background, $bounds)
-        }
-        finally {
-            $background.Dispose()
+        # Edge 截图会给 SVG 外侧加纯白底；转成透明，保留圆形 Logo。
+        for ($y = 0; $y -lt $source.Height; $y++) {
+            for ($x = 0; $x -lt $source.Width; $x++) {
+                $pixel = $source.GetPixel($x, $y)
+                if ($pixel.R -gt 252 -and $pixel.G -gt 252 -and $pixel.B -gt 252) {
+                    $source.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, $pixel.R, $pixel.G, $pixel.B))
+                }
+            }
         }
 
-        $white = [System.Drawing.Pens]::White
-        $screenWidth = [int]($Size * 0.58)
-        $screenHeight = [int]($Size * 0.39)
-        $screenX = [int](($Size - $screenWidth) / 2)
-        $screenY = [int]($Size * 0.25)
-        $stroke = [int]($Size * 0.055)
-        $screenPen = [System.Drawing.Pen]::new($white.Color, $stroke)
-        $screenPen.LineJoin = [System.Drawing.Drawing2D.LineJoin]::Round
+        $result = [System.Drawing.Bitmap]::new($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+        $graphics = [System.Drawing.Graphics]::FromImage($result)
         try {
-            $graphics.DrawRectangle($screenPen, $screenX, $screenY, $screenWidth, $screenHeight)
-            $standY = $screenY + $screenHeight
-            $graphics.DrawLine($screenPen, [int]($Size * 0.38), [int]($Size * 0.74), [int]($Size * 0.62), [int]($Size * 0.74))
-            $graphics.DrawLine($screenPen, [int]($Size * 0.5), $standY, [int]($Size * 0.5), [int]($Size * 0.74))
+            $graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+            $graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+            $graphics.DrawImage($source, 0, 0, $Size, $Size)
         }
         finally {
-            $screenPen.Dispose()
+            $graphics.Dispose()
         }
 
-        $castPen = [System.Drawing.Pen]::new($white.Color, [int]($Size * 0.047))
-        $castPen.StartCap = [System.Drawing.Drawing2D.LineCap]::Round
-        $castPen.EndCap = [System.Drawing.Drawing2D.LineCap]::Round
-        try {
-            $originX = [int]($Size * 0.32)
-            $originY = [int]($Size * 0.55)
-            $dotSize = [int]($Size * 0.065)
-            $graphics.FillEllipse($white.Brush, $originX - [int]($dotSize / 2), $originY - [int]($dotSize / 2), $dotSize, $dotSize)
-            $graphics.DrawArc($castPen, $originX - [int]($Size * 0.02), $originY - [int]($Size * 0.15), [int]($Size * 0.28), [int]($Size * 0.30), 270, 90)
-            $graphics.DrawArc($castPen, $originX - [int]($Size * 0.02), $originY - [int]($Size * 0.25), [int]($Size * 0.46), [int]($Size * 0.50), 270, 90)
-        }
-        finally {
-            $castPen.Dispose()
+        # 只保留 SVG 中的圆形徽章，避免浏览器截图的画布底色进入图标。
+        $center = ($Size - 1) / 2
+        $radius = $Size * 0.456
+        for ($y = 0; $y -lt $Size; $y++) {
+            for ($x = 0; $x -lt $Size; $x++) {
+                $distance = [Math]::Sqrt((($x - $center) * ($x - $center)) + (($y - $center) * ($y - $center)))
+                if ($distance -gt $radius) {
+                    $pixel = $result.GetPixel($x, $y)
+                    $result.SetPixel($x, $y, [System.Drawing.Color]::FromArgb(0, $pixel.R, $pixel.G, $pixel.B))
+                }
+            }
         }
 
-        return $bitmap
+        return $result
     }
     finally {
-        $graphics.Dispose()
+        $source.Dispose()
     }
 }
 
@@ -74,20 +94,12 @@ function Save-Icon([System.Drawing.Bitmap]$Bitmap, [string]$Path) {
         $icon = [System.Drawing.Icon]::FromHandle($iconHandle)
         try {
             $stream = [System.IO.File]::Open($Path, [System.IO.FileMode]::Create)
-            try {
-                $icon.Save($stream)
-            }
-            finally {
-                $stream.Dispose()
-            }
+            try { $icon.Save($stream) }
+            finally { $stream.Dispose() }
         }
-        finally {
-            $icon.Dispose()
-        }
+        finally { $icon.Dispose() }
     }
-    finally {
-        $null = [AirMirrorNative]::DestroyIcon($iconHandle)
-    }
+    finally { $null = [AirMirrorNative]::DestroyIcon($iconHandle) }
 }
 
 if (-not ('AirMirrorNative' -as [type])) {
@@ -102,25 +114,17 @@ public static class AirMirrorNative {
 }
 
 $iconBitmap = New-LogoBitmap 256
-try {
-    Save-Icon $iconBitmap $iconPath
-}
-finally {
-    $iconBitmap.Dispose()
-}
+try { Save-Icon $iconBitmap $iconPath }
+finally { $iconBitmap.Dispose() }
 
 $banner = [System.Drawing.Bitmap]::new(164, 314)
 $bannerGraphics = [System.Drawing.Graphics]::FromImage($banner)
 try {
-    $bannerGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+    $bannerGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
     $bannerGraphics.Clear([System.Drawing.Color]::FromArgb(9, 20, 45))
     $bannerLogo = New-LogoBitmap 124
-    try {
-        $bannerGraphics.DrawImage($bannerLogo, 20, 34, 124, 124)
-    }
-    finally {
-        $bannerLogo.Dispose()
-    }
+    try { $bannerGraphics.DrawImage($bannerLogo, 20, 28, 124, 124) }
+    finally { $bannerLogo.Dispose() }
     $titleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 15, [System.Drawing.FontStyle]::Bold)
     $subtitleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 9, [System.Drawing.FontStyle]::Regular)
     $subtitleBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(154, 218, 245))
@@ -131,32 +135,19 @@ try {
         $bannerGraphics.DrawString('iPhone 屏幕镜像', $subtitleFont, $subtitleBrush, [System.Drawing.RectangleF]::new(2, 212, 160, 24), $centeredText)
     }
     finally {
-        $titleFont.Dispose()
-        $subtitleFont.Dispose()
-        $subtitleBrush.Dispose()
-        $centeredText.Dispose()
+        $titleFont.Dispose(); $subtitleFont.Dispose(); $subtitleBrush.Dispose(); $centeredText.Dispose()
     }
     $banner.Save($wizardImagePath, [System.Drawing.Imaging.ImageFormat]::Bmp)
 }
-finally {
-    $bannerGraphics.Dispose()
-    $banner.Dispose()
-}
+finally { $bannerGraphics.Dispose(); $banner.Dispose() }
 
 $small = [System.Drawing.Bitmap]::new(55, 55)
 $smallGraphics = [System.Drawing.Graphics]::FromImage($small)
 try {
     $smallGraphics.Clear([System.Drawing.Color]::FromArgb(9, 20, 45))
     $smallLogo = New-LogoBitmap 49
-    try {
-        $smallGraphics.DrawImage($smallLogo, 3, 3, 49, 49)
-    }
-    finally {
-        $smallLogo.Dispose()
-    }
+    try { $smallGraphics.DrawImage($smallLogo, 3, 3, 49, 49) }
+    finally { $smallLogo.Dispose() }
     $small.Save($wizardSmallImagePath, [System.Drawing.Imaging.ImageFormat]::Bmp)
 }
-finally {
-    $smallGraphics.Dispose()
-    $small.Dispose()
-}
+finally { $smallGraphics.Dispose(); $small.Dispose() }
