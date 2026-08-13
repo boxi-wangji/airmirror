@@ -2,6 +2,8 @@
 
 把 iPhone 画面投到 Windows。
 
+[English README](./README.en.md)
+
 不录屏，不保存画面，不上传画面。
 
 ## 使用
