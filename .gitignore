@@ -1,0 +1,15 @@
+# Per-user data and local runtime logs.
+data/
+
+# Downloaded third-party runtime and local build output.
+engine/
+app/
+.publish/
+artifacts/
+dist/
+src/bin/
+src/obj/
+
+# IDE and debugging artifacts.
+.vs/
+*.pdb
