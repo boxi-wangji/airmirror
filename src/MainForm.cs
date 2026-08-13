@@ -779,10 +779,18 @@ internal sealed class MainForm : Form
         var directory = new DirectoryInfo(AppContext.BaseDirectory);
         while (directory is not null)
         {
-            var candidate = Path.Combine(directory.FullName, "engine", "uxplay-windows.exe");
-            if (File.Exists(candidate))
+            var candidates = new[]
             {
-                return Path.GetDirectoryName(candidate);
+                Path.Combine(directory.FullName, "engine", "uxplay-windows.exe"),
+                Path.Combine(directory.FullName, "运行环境", "engine", "uxplay-windows.exe")
+            };
+
+            foreach (var candidate in candidates)
+            {
+                if (File.Exists(candidate))
+                {
+                    return Path.GetDirectoryName(candidate);
+                }
             }
 
             directory = directory.Parent;

@@ -1,3 +1,5 @@
+using Velopack;
+
 namespace AirMirror;
 
 internal static class Program
@@ -5,6 +7,8 @@ internal static class Program
     [STAThread]
     private static void Main(string[] arguments)
     {
+        VelopackApp.Build().Run();
+
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         Application.EnableVisualStyles();
         Application.SetCompatibleTextRenderingDefault(false);

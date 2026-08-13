@@ -1,9 +1,11 @@
 $ErrorActionPreference = 'Stop'
 
-$projectRoot = Split-Path -Parent $PSScriptRoot
-$engineDirectory = Join-Path $projectRoot 'engine'
+$sourceRoot = Split-Path -Parent $PSScriptRoot
+$workspaceRoot = Split-Path -Parent $sourceRoot
+$buildRoot = Join-Path $workspaceRoot '构建'
+$engineDirectory = Join-Path $buildRoot '运行环境\engine'
 $engineExecutable = Join-Path $engineDirectory 'uxplay-windows.exe'
-$downloadDirectory = Join-Path $projectRoot 'artifacts'
+$downloadDirectory = Join-Path $buildRoot '临时\下载'
 $archivePath = Join-Path $downloadDirectory 'uxplay-windows-2.0.0.1736.zip'
 $downloadUrl = 'https://github.com/leapbtw/uxplay-windows/releases/download/2.0.0.1736/uxplay-windows.zip'
 $expectedSha256 = '9D3A51C15FC9DB857351195E7EB7BBB21700D9AE25D936A54BCF8536B62CCA18'

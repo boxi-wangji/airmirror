@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)..\构建\临时\obj\</BaseIntermediateOutputPath>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)..\构建\临时\bin\</BaseOutputPath>
+    <MSBuildProjectExtensionsPath>$(MSBuildThisFileDirectory)..\构建\临时\obj\</MSBuildProjectExtensionsPath>
+  </PropertyGroup>
+</Project>

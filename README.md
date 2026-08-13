@@ -22,25 +22,26 @@ AirMirror 当前固定使用 Direct3D 12 输出画面，并关闭了音视频同
 
 ## 文件结构
 
-- `src/`：AirMirror 启动器源码。
-- `assets/`：AirMirror 的 SVG Logo，以及生成 Windows 图标和安装向导视觉素材的脚本。
-- `installer/`：简体中文安装向导与构建脚本。
-- `dist/`：只保留最新构建的安装包。
-- `engine/`、`artifacts/`、`src/bin/` 和 `src/obj/`：构建过程的临时内容，均由脚本自动生成，不纳入源码。
+项目根目录分为两个目录：
+
+- `源码/`：Git 仓库。包含 `src/`、`assets/`、`installer/`、README 和许可证。
+- `构建/`：不进 Git。包含 `安装程序/`、`程序文件/`、`运行环境/` 和临时文件。
+
+SVG 是 Logo 的唯一正式源文件；ICO 和安装向导图片由构建脚本生成到 `构建/临时/品牌素材/`。
 
 ## 安装包
 
-运行 `AirMirror-Setup-*.exe`，即可通过简体中文安装向导完成安装、创建开始菜单快捷方式，并可从 Windows 设置中卸载。
+运行 `AirMirror-Setup-*.exe`，即可完成一键安装、创建桌面和开始菜单快捷方式，并可从 Windows 设置中卸载。
 
 ## 从源码构建
 
-需要 Windows、.NET SDK 10 和 Inno Setup 6。以下命令会下载并校验指定版本的 UxPlay Windows 接收内核，再生成安装包：
+需要 Windows 和 .NET SDK 10。以下命令会下载并校验指定版本的 UxPlay Windows 接收内核，再生成 Velopack 一键安装包：
 
 ```powershell
 .\installer\Build-Installer.ps1 -Version 1.0.0
 ```
 
-输出文件为 `dist\AirMirror-Setup-1.0.0.exe`；重新构建时会自动清理旧安装包。
+输出文件为 `构建\安装程序\AirMirror-Setup-1.0.0.exe`；重新构建时会自动清理旧安装包。安装过程使用 AirMirror 品牌画面，不使用传统安装向导。
 
 ## 不做的事
 

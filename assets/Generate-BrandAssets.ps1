@@ -3,13 +3,17 @@ $ErrorActionPreference = 'Stop'
 
 Add-Type -AssemblyName System.Drawing
 
-$projectRoot = Split-Path -Parent $PSScriptRoot
+$sourceRoot = Split-Path -Parent $PSScriptRoot
+$workspaceRoot = Split-Path -Parent $sourceRoot
+$buildRoot = Join-Path $workspaceRoot '构建'
+$brandDirectory = Join-Path $buildRoot '临时\品牌素材'
 $logoSourcePath = Join-Path $PSScriptRoot 'airmirror-logo.svg'
-$iconPath = Join-Path $PSScriptRoot 'AirMirror.ico'
-$wizardImagePath = Join-Path $projectRoot 'installer\airmirror-wizard.bmp'
-$wizardSmallImagePath = Join-Path $projectRoot 'installer\airmirror-wizard-small.bmp'
-$renderPath = Join-Path $env:TEMP 'airmirror-logo-render.png'
-$profileDirectory = Join-Path $env:TEMP 'airmirror-logo-render-profile'
+$iconPath = Join-Path $brandDirectory 'AirMirror.ico'
+$splashImagePath = Join-Path $brandDirectory 'AirMirror-Setup.png'
+$renderPath = Join-Path $brandDirectory 'airmirror-logo-render.png'
+$profileDirectory = Join-Path $brandDirectory 'edge-profile'
+
+New-Item -ItemType Directory -Path $brandDirectory -Force | Out-Null
 
 function Get-EdgeExecutable {
     $candidates = @(
@@ -117,37 +121,26 @@ $iconBitmap = New-LogoBitmap 256
 try { Save-Icon $iconBitmap $iconPath }
 finally { $iconBitmap.Dispose() }
 
-$banner = [System.Drawing.Bitmap]::new(164, 314)
+$banner = [System.Drawing.Bitmap]::new(960, 540)
 $bannerGraphics = [System.Drawing.Graphics]::FromImage($banner)
 try {
     $bannerGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
     $bannerGraphics.Clear([System.Drawing.Color]::FromArgb(9, 20, 45))
-    $bannerLogo = New-LogoBitmap 124
-    try { $bannerGraphics.DrawImage($bannerLogo, 20, 28, 124, 124) }
-    finally { $bannerLogo.Dispose() }
-    $titleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 15, [System.Drawing.FontStyle]::Bold)
-    $subtitleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 9, [System.Drawing.FontStyle]::Regular)
+    $bannerLogo = New-LogoBitmap 240
+    $titleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 42, [System.Drawing.FontStyle]::Bold)
+    $subtitleFont = [System.Drawing.Font]::new('Microsoft YaHei UI', 20, [System.Drawing.FontStyle]::Regular)
     $subtitleBrush = [System.Drawing.SolidBrush]::new([System.Drawing.Color]::FromArgb(154, 218, 245))
     $centeredText = [System.Drawing.StringFormat]::new()
     $centeredText.Alignment = [System.Drawing.StringAlignment]::Center
     try {
-        $bannerGraphics.DrawString('AirMirror', $titleFont, [System.Drawing.Brushes]::White, [System.Drawing.RectangleF]::new(2, 177, 160, 28), $centeredText)
-        $bannerGraphics.DrawString('iPhone 屏幕镜像', $subtitleFont, $subtitleBrush, [System.Drawing.RectangleF]::new(2, 212, 160, 24), $centeredText)
+        $bannerGraphics.DrawImage($bannerLogo, 360, 72, 240, 240)
+        $bannerGraphics.DrawString('AirMirror', $titleFont, [System.Drawing.Brushes]::White, [System.Drawing.RectangleF]::new(0, 320, 960, 90), $centeredText)
+        $bannerGraphics.DrawString('iPhone 屏幕镜像', $subtitleFont, $subtitleBrush, [System.Drawing.RectangleF]::new(0, 415, 960, 60), $centeredText)
     }
     finally {
         $titleFont.Dispose(); $subtitleFont.Dispose(); $subtitleBrush.Dispose(); $centeredText.Dispose()
     }
-    $banner.Save($wizardImagePath, [System.Drawing.Imaging.ImageFormat]::Bmp)
+    $bannerLogo.Dispose()
+    $banner.Save($splashImagePath, [System.Drawing.Imaging.ImageFormat]::Png)
 }
 finally { $bannerGraphics.Dispose(); $banner.Dispose() }
-
-$small = [System.Drawing.Bitmap]::new(55, 55)
-$smallGraphics = [System.Drawing.Graphics]::FromImage($small)
-try {
-    $smallGraphics.Clear([System.Drawing.Color]::FromArgb(9, 20, 45))
-    $smallLogo = New-LogoBitmap 49
-    try { $smallGraphics.DrawImage($smallLogo, 3, 3, 49, 49) }
-    finally { $smallLogo.Dispose() }
-    $small.Save($wizardSmallImagePath, [System.Drawing.Imaging.ImageFormat]::Bmp)
-}
-finally { $smallGraphics.Dispose(); $small.Dispose() }
