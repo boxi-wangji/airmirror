@@ -21,7 +21,6 @@ if ($actualSha256 -ne $expectedSha256) {
     throw "UxPlay archive hash verification failed: $actualSha256"
 }
 
-Remove-Item -LiteralPath $engineDirectory -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $engineDirectory -Force | Out-Null
 Expand-Archive -LiteralPath $archivePath -DestinationPath $engineDirectory -Force
 

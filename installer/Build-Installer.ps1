@@ -11,6 +11,7 @@ $publishDirectory = Join-Path $projectRoot 'artifacts\publish'
 $installerScript = Join-Path $PSScriptRoot 'AirMirror.iss'
 $brandAssetsScript = Join-Path $projectRoot 'assets\Generate-BrandAssets.ps1'
 $engineExecutable = Join-Path $projectRoot 'engine\uxplay-windows.exe'
+$distributionDirectory = Join-Path $projectRoot 'dist'
 $isccCandidates = @(
     (Join-Path ${env:ProgramFiles(x86)} 'Inno Setup 6\ISCC.exe'),
     (Join-Path $env:LOCALAPPDATA 'Programs\Inno Setup 6\ISCC.exe')
@@ -26,6 +27,10 @@ if (-not (Test-Path -LiteralPath $engineExecutable)) {
 }
 
 & $brandAssetsScript
+
+# 本地只保留最新安装包；历史版本由发布平台管理，不在源码目录堆积。
+Get-ChildItem -LiteralPath $distributionDirectory -Filter 'AirMirror-Setup-*.exe' -File -ErrorAction SilentlyContinue |
+    Remove-Item -Force
 
 Remove-Item -LiteralPath $publishDirectory -Recurse -Force -ErrorAction SilentlyContinue
 dotnet publish $projectFile `

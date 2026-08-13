@@ -23,11 +23,10 @@ AirMirror 当前固定使用 Direct3D 12 输出画面，并关闭了音视频同
 ## 文件结构
 
 - `src/`：AirMirror 启动器源码。
-- `engine/`：开源 UxPlay Windows 接收内核及其视频、音频、网络组件；安装包会将其部署到程序目录。
-- `%LOCALAPPDATA%\\AirMirror\\`：AirMirror 的本机设备名，第一次运行后生成。
-- `%LOCALAPPDATA%\\AirMirror\\logs\\gstreamer.log`：仅在排查画面故障时生成的本机视频日志。
 - `assets/`：AirMirror 的 SVG Logo，以及生成 Windows 图标和安装向导视觉素材的脚本。
 - `installer/`：简体中文安装向导与构建脚本。
+- `dist/`：只保留最新构建的安装包。
+- `engine/`、`artifacts/`、`src/bin/` 和 `src/obj/`：构建过程的临时内容，均由脚本自动生成，不纳入源码。
 
 ## 安装包
 
@@ -41,7 +40,7 @@ AirMirror 当前固定使用 Direct3D 12 输出画面，并关闭了音视频同
 .\installer\Build-Installer.ps1 -Version 1.0.0
 ```
 
-输出文件为 `dist\AirMirror-Setup-1.0.0.exe`。
+输出文件为 `dist\AirMirror-Setup-1.0.0.exe`；重新构建时会自动清理旧安装包。
 
 ## 不做的事
 
