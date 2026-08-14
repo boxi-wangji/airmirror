@@ -18,12 +18,12 @@
 </p>
 
 <p align="center">
-  <a href="./README.md">Chinese</a> · <strong>English</strong>
+  <a lang="en" href="./README.md">Chinese</a> · <strong lang="en">English</strong>
 </p>
 
 ---
 
-## Overview
+<h2 lang="en">Overview</h2>
 
 AirMirror is a Windows AirPlay receiver for iPhone. It does one thing: mirror your screen to this PC. No recording. No local captures. No uploads.
 
@@ -52,8 +52,8 @@ Windows and .NET SDK 10 are required.
 
 The installer is written to the project build directory. The source directory is tracked by Git; build output is not.
 
-## License
+<h2 lang="en">License</h2>
 
-AirMirror is licensed under [GPL-3.0](./LICENSE). See [Third-party notices](./THIRD_PARTY_NOTICES.md) for the third-party engine source and license.
+<p lang="en">AirMirror is licensed under <a href="./LICENSE">GPL-3.0</a>. See <a href="./THIRD_PARTY_NOTICES.md">Third-party notices</a> for the third-party engine source and license.</p>
 
 </div>
