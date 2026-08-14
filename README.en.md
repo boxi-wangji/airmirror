@@ -7,8 +7,7 @@
 <h1 align="center">AirMirror</h1>
 
 <p align="center">
-  Mirror your iPhone screen to Windows<br>
-  Simple · Local · Focused
+  Mirror your iPhone screen to Windows
 </p>
 
 <p align="center">

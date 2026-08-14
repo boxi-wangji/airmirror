@@ -5,8 +5,7 @@
 <h1 align="center">AirMirror</h1>
 
 <p align="center">
-  iPhone 屏幕镜像到 Windows<br>
-  简洁 · 本地 · 专注
+  iPhone 屏幕镜像到 Windows
 </p>
 
 <p align="center">
