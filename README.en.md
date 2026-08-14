@@ -1,3 +1,5 @@
+<div lang="en">
+
 <p align="center">
   <img src="./assets/airmirror-logo.svg" width="144" alt="AirMirror Logo">
 </p>
@@ -52,4 +54,6 @@ The installer is written to the project build directory. The source directory is
 
 ## License
 
-AirMirror is licensed under [GPL-3.0](./LICENSE). See [Third-party notices](./第三方许可.md) for the third-party engine source and license.
+AirMirror is licensed under [GPL-3.0](./LICENSE). See [Third-party notices](./THIRD_PARTY_NOTICES.md) for the third-party engine source and license.
+
+</div>
