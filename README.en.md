@@ -1,10 +1,29 @@
-# AirMirror
+<p align="center">
+  <img src="./assets/airmirror-logo.svg" width="144" alt="AirMirror Logo">
+</p>
 
-Mirror your iPhone screen to Windows.
+<h1 align="center">AirMirror</h1>
 
-[中文说明](./README.md)
+<p align="center">
+  Mirror your iPhone screen to Windows<br>
+  Simple · Local · Focused
+</p>
 
-No recording. No local captures. No uploads.
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.5-12D8F2?style=flat-square" alt="Version 1.0.5">
+  <img src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-153557?style=flat-square" alt="Windows 10 and 11">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-D7A06B?style=flat-square" alt="GPL-3.0">
+</p>
+
+<p align="center">
+  <a href="./README.md">简体中文</a> · <strong>English</strong>
+</p>
+
+---
+
+## Overview
+
+AirMirror is a Windows AirPlay receiver for iPhone. It does one thing: mirror your screen to this PC. No recording. No local captures. No uploads.
 
 ## Get started
 
@@ -13,19 +32,13 @@ No recording. No local captures. No uploads.
 3. Select “Start receiving AirPlay”.
 4. Open “Screen Mirroring” in iPhone Control Center and select the device name.
 
-Your iPhone and PC must use the same Wi‑Fi network. Networks with client isolation may prevent the iPhone from finding the PC.
-
-## What AirMirror does
-
-- Receives AirPlay screen mirroring from iPhone.
-- Renders video with Direct3D 12.
-- Uses the unmodified UxPlay Windows receiver engine.
+> Your iPhone and PC must use the same Wi‑Fi network. Networks with client isolation may prevent the iPhone from finding the PC.
 
 ## Install and uninstall
 
-The installer creates Desktop and Start menu shortcuts. You can uninstall it from Windows Settings.
-
-On first launch, Windows may ask for Bonjour or network access permission. Follow the system prompt.
+- The installer creates Desktop and Start menu shortcuts.
+- You can uninstall it from Windows Settings.
+- On first launch, Windows may ask for Bonjour or network access permission. Follow the system prompt.
 
 ## Build from source
 
@@ -35,7 +48,7 @@ Windows and .NET SDK 10 are required.
 .\installer\Build-Installer.ps1 -Version 1.0.0
 ```
 
-The build script downloads and verifies the UxPlay Windows receiver engine, then writes the installer to `构建\安装程序\`. Source and build output are separate: `源码\` is tracked by Git, while `构建\` is not.
+The installer is written to `构建\安装程序\`. `源码\` is tracked by Git; `构建\` is not.
 
 ## License
 

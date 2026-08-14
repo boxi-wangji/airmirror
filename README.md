@@ -1,10 +1,29 @@
-# AirMirror
+<p align="center">
+  <img src="./assets/airmirror-logo.svg" width="144" alt="AirMirror Logo">
+</p>
 
-把 iPhone 画面投到 Windows。
+<h1 align="center">AirMirror</h1>
 
-[English README](./README.en.md)
+<p align="center">
+  iPhone 屏幕镜像到 Windows<br>
+  简洁 · 本地 · 专注
+</p>
 
-不录屏，不保存画面，不上传画面。
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.5-12D8F2?style=flat-square" alt="Version 1.0.5">
+  <img src="https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-153557?style=flat-square" alt="Windows 10 and 11">
+  <img src="https://img.shields.io/badge/license-GPL--3.0-D7A06B?style=flat-square" alt="GPL-3.0">
+</p>
+
+<p align="center">
+  <strong>简体中文</strong> · <a href="./README.en.md">English</a>
+</p>
+
+---
+
+## 简介
+
+AirMirror 是一个给 iPhone 使用的 Windows AirPlay 接收器。它只负责把画面投到这台电脑：不录屏，不保存画面，不上传画面。
 
 ## 使用
 
@@ -13,19 +32,13 @@
 3. 点击「开始接收 AirPlay」。
 4. 在 iPhone 控制中心打开「屏幕镜像」，选择该设备名。
 
-iPhone 与电脑需要连接同一 Wi‑Fi。公司、酒店或访客 Wi‑Fi 若开启设备隔离，iPhone 将无法找到电脑。
-
-## AirMirror 做什么
-
-- 接收 iPhone 的 AirPlay 屏幕镜像。
-- 使用 Direct3D 12 显示画面。
-- 使用未修改的 UxPlay Windows 接收内核。
+> iPhone 与电脑需要连接同一 Wi‑Fi。若网络开启设备隔离，iPhone 将无法找到电脑。
 
 ## 安装与卸载
 
-安装包会创建桌面和开始菜单快捷方式；可在 Windows 设置中卸载。
-
-首次启动时，Windows 可能提示 Bonjour 或网络访问权限，按系统提示处理即可。
+- 安装包会创建桌面和开始菜单快捷方式。
+- 可在 Windows 设置中卸载。
+- 首次启动时，Windows 可能提示 Bonjour 或网络访问权限，按系统提示处理即可。
 
 ## 从源码构建
 
@@ -35,7 +48,7 @@ iPhone 与电脑需要连接同一 Wi‑Fi。公司、酒店或访客 Wi‑Fi �
 .\installer\Build-Installer.ps1 -Version 1.0.0
 ```
 
-构建脚本会下载并校验 UxPlay Windows 接收内核，生成安装包到 `构建\安装程序\`。源码和构建产物分开：`源码\` 进入 Git，`构建\` 不进入 Git。
+安装包会生成到 `构建\安装程序\`。`源码\` 进入 Git，`构建\` 不进入 Git。
 
 ## 许可
 
