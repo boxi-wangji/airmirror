@@ -16,7 +16,7 @@
 </p>
 
 <p align="center">
-  <a href="./README.md">简体中文</a> · <strong>English</strong>
+  <a href="./README.md">Chinese</a> · <strong>English</strong>
 </p>
 
 ---
@@ -48,8 +48,8 @@ Windows and .NET SDK 10 are required.
 .\installer\Build-Installer.ps1 -Version 1.0.0
 ```
 
-The installer is written to `构建\安装程序\`. `源码\` is tracked by Git; `构建\` is not.
+The installer is written to the project build directory. The source directory is tracked by Git; build output is not.
 
 ## License
 
-AirMirror is licensed under [GPL-3.0](./LICENSE). See [第三方许可.md](./第三方许可.md) for the third-party engine source and license.
+AirMirror is licensed under [GPL-3.0](./LICENSE). See [Third-party notices](./第三方许可.md) for the third-party engine source and license.
